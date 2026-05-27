@@ -1,0 +1,42 @@
+---
+import { getPageContext } from '../../../lib/cms/queries'
+import { mapPageSeo } from '../../../lib/cms/mappers/seo'
+import { mapNavItems } from '../../../lib/cms/mappers/links'
+import BlockRenderer from '../block_renderer/index.astro'
+import { Header, Footer } from '../index'
+import { CoreLayout } from '../../../layouts'
+
+interface Props {
+  slug: string
+}
+
+const { slug } = Astro.props
+
+const { page, siteSettings, navigation } = await getPageContext(slug)
+
+if (!page) {
+  return Astro.redirect('/404')
+}
+
+const seo = mapPageSeo(page, siteSettings)
+const headerNav = mapNavItems(navigation.headerNavItems)
+const footerNav = mapNavItems(navigation.footerNavItems)
+const legalLinks = mapNavItems(navigation.legalLinks)
+---
+
+<CoreLayout
+  {...seo}
+  site={siteSettings}
+  showWhatsappButton={navigation.showWhatsappButton !== false}
+  showUpButton={navigation.showUpButton !== false}
+>
+  <Header site={siteSettings} navLinks={headerNav} />
+  <main id="main-content">
+    {
+      page.layout?.map((block) => (
+        <BlockRenderer block={block} site={siteSettings} />
+      ))
+    }
+  </main>
+  <Footer site={siteSettings} footerNav={footerNav} legalLinks={legalLinks} />
+</CoreLayout>

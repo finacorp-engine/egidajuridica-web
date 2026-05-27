@@ -1,33 +1,24 @@
 ---
-import { routes, site } from "../../../config";
+import { site as fallbackSite } from "../../../config";
+import type { CmsSiteSettings } from "../../../lib/cms/types";
+import type { NavLink } from "../../../lib/cms/types";
 
-const navLinks = [
-  {
-    label: "Inicio",
-    href: routes.home,
-    ariaLabel: "Ir a la página de inicio",
-  },
-  {
-    label: "Acerca",
-    href: routes.about,
-    ariaLabel: "Ir a la página sobre nosotros",
-  },
-  {
-    label: "Servicios",
-    href: routes.services,
-    ariaLabel: "Ir a la página de servicios jurídicos",
-  },
-  {
-    label: "Testimonios",
-    href: routes.testimonials,
-    ariaLabel: "Ir a la página de testimonios de clientes",
-  },
-  {
-    label: "Contáctanos",
-    href: routes.contact,
-    ariaLabel: "Ir a la página de contacto",
-  },
+interface Props {
+  site?: CmsSiteSettings;
+  navLinks?: NavLink[];
+}
+
+const { site = fallbackSite, navLinks = [] } = Astro.props;
+
+const defaultNavLinks: NavLink[] = [
+  { label: "Inicio", href: "/", ariaLabel: "Ir a la página de inicio" },
+  { label: "Acerca", href: "/acerca", ariaLabel: "Ir a la página sobre nosotros" },
+  { label: "Servicios", href: "/servicios", ariaLabel: "Ir a la página de servicios jurídicos" },
+  { label: "Testimonios", href: "/testimonios", ariaLabel: "Ir a la página de testimonios de clientes" },
+  { label: "Contáctanos", href: "/contacto", ariaLabel: "Ir a la página de contacto" },
 ];
+
+const links = navLinks.length > 0 ? navLinks : defaultNavLinks;
 ---
 
 <header
@@ -40,7 +31,7 @@ const navLinks = [
     aria-label="Navegación principal"
   >
     {
-      navLinks.map((link) => (
+      links.map((link) => (
         <a
           href={link.href}
           class="flex items-center gap-2 hover:text-primary-foreground/80 transition font-medium"

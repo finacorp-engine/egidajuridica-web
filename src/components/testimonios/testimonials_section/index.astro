@@ -1,77 +1,39 @@
 ---
-export const testimonialsData = [
-  {
-    quote: `"Desde el primer contacto recibí un trato muy profesional y cercano. Me explicaron con claridad las opciones legales que tenía y me acompañaron durante todo el proceso. Sentí en todo momento que mi caso estaba bien estudiado y en manos de personas con experiencia."`,
-    author: "Carlos M.",
-  },
-  {
-    quote: `"Lo que más valoro de su trabajo es la seriedad y el rigor con el que analizan cada situación. No prometen soluciones rápidas, sino estrategias realistas y bien fundamentadas. Gracias a su asesoramiento pude resolver un problema legal que llevaba tiempo preocupándome."`,
-    author: "Laura G.",
-  },
-  {
-    quote: `"Me ofrecieron una orientación clara desde el primer momento y mantuvieron una comunicación constante durante todo el procedimiento. Su forma de trabajar transmite confianza y profesionalidad. Sin duda, un despacho en el que se nota la experiencia."`,
-    author: "Miguel R.",
-  },
-  {
-    quote: `"Acudí a ellos por recomendación y quedé muy satisfecho con el trato recibido. Analizaron mi caso con detalle y me explicaron cada paso de forma sencilla. Su acompañamiento fue clave para tomar decisiones importantes con tranquilidad."`,
-    author: "Ana P.",
-  },
-  {
-    quote: `"Destaco especialmente su compromiso y su capacidad para ofrecer soluciones claras en situaciones complejas. Me sentí escuchado y bien asesorado desde el principio hasta el final. Es un equipo serio, accesible y muy bien preparado."`,
-    author: "Javier S.",
-  },
-  {
-    quote: `"Desde la primera consulta percibí un alto nivel de profesionalidad. Me ofrecieron una visión clara del problema y de las posibles soluciones, lo que me dio mucha seguridad para seguir adelante con el proceso."`,
-    author: "Sofía L.",
-  },
-  {
-    quote: `"Valoro mucho la transparencia con la que trabajaron mi caso. En todo momento supe en qué punto estaba el procedimiento y qué pasos se iban a dar a continuación. Eso me dio mucha tranquilidad."`,
-    author: "Daniel T.",
-  },
-  {
-    quote: `"El equipo mostró una gran capacidad para entender mi situación y ofrecer una estrategia adaptada a mis necesidades. Su trato fue cercano y profesional durante todo el tiempo que duró el proceso."`,
-    author: "María R.",
-  },
-  {
-    quote: `"Me sentí acompañado y bien asesorado desde el inicio hasta el final. Supieron explicarme aspectos legales complejos de forma sencilla y siempre estuvieron disponibles para resolver mis dudas."`,
-    author: "Pablo C.",
-  },
-  {
-    quote: `"Recomiendo este despacho por su seriedad, su compromiso y la forma clara en la que trabajan. Gracias a su apoyo pude afrontar un problema legal importante con mayor seguridad y confianza."`,
-    author: "Elena V.",
-  },
-];
+interface Props {
+  testimonialsData?: Array<{ quote: string; author: string }>;
+}
+
+const { testimonialsData = [] } = Astro.props;
 ---
 
 <section
   class="max-w-5xl mx-auto px-4 sm:px-6 py-12 md:py-16 lg:py-24 font-sans"
   aria-label="Testimonios de clientes de Egida Jurídica"
-  id="main-content"
 >
-  <div
-    class="space-y-4 md:space-y-6"
-    role="list"
-    aria-label="Lista de testimonios"
-  >
-    {
-      testimonialsData.map((testimonial, index) => (
-        <article
-          class="border border-border/60 p-5 sm:p-6 md:p-8 lg:p-12 bg-background w-full testimonial-card-animate"
-          role="listitem"
-          aria-label={`Testimonio de ${testimonial.author}`}
-        >
-          <blockquote>
-            <p class="text-muted-foreground text-sm md:text-base leading-relaxed mb-4 md:mb-6">
-              {testimonial.quote}
-            </p>
-            <footer>
-              <cite class="font-serif text-foreground text-lg md:text-xl font-medium tracking-wide not-italic">
-                {testimonial.author}
-              </cite>
-            </footer>
-          </blockquote>
-        </article>
-      ))
-    }
-  </div>
+  {
+    testimonialsData.length > 0 && (
+      <div class="space-y-4 md:space-y-6" role="list" aria-label="Lista de testimonios">
+        {
+          testimonialsData.map((testimonial) => (
+            <article
+              class="border border-border/60 p-5 sm:p-6 md:p-8 lg:p-12 bg-background w-full testimonial-card-animate"
+              role="listitem"
+              aria-label={`Testimonio de ${testimonial.author}`}
+            >
+              <blockquote>
+                <p class="text-muted-foreground text-sm md:text-base leading-relaxed mb-4 md:mb-6">
+                  {testimonial.quote}
+                </p>
+                <footer>
+                  <cite class="font-serif text-foreground text-lg md:text-xl font-medium tracking-wide not-italic">
+                    {testimonial.author}
+                  </cite>
+                </footer>
+              </blockquote>
+            </article>
+          ))
+        }
+      </div>
+    )
+  }
 </section>

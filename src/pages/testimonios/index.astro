@@ -1,29 +1,5 @@
 ---
-import { Footer, Header, HeroSection } from "../../components/shared";
-import TestimonialsSection from "../../components/testimonios/testimonials_section/index.astro";
-import { CoreLayout } from "../../layouts";
-import { testimonialsMeta } from "../../config";
+import CmsPage from "../../components/shared/cms_page/index.astro";
 ---
 
-<CoreLayout
-  title={testimonialsMeta.title}
-  description={testimonialsMeta.description}
-  keywords={testimonialsMeta.keywords}
-  canonical={testimonialsMeta.canonical}
-  type={testimonialsMeta.type}
-  robots={testimonialsMeta.robots}
-  structuredData={testimonialsMeta.structuredData}
->
-  <Header />
-  <main id="main-content">
-    <HeroSection
-      title="La confianza de nuestros clientes nos avala"
-      description="Los resultados obtenidos y la satisfacción de nuestros clientes son la mejor muestra de nuestro enfoque profesional y de nuestra forma de ejercer el derecho."
-      imageSrc="https://images.pexels.com/photos/1181421/pexels-photo-1181421.jpeg"
-      imageAlt="Profesionales del equipo de Egida Jurídica en reunión"
-      buttons={[]}
-    />
-    <TestimonialsSection />
-  </main>
-  <Footer />
-</CoreLayout>
+<CmsPage slug="testimonios" />

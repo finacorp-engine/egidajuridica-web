@@ -1,31 +1,5 @@
 ---
-import { Footer, Header, HeroSection } from "../../components/shared";
-import { routes, notFoundMeta } from "../../config";
-import { CoreLayout } from "../../layouts";
+import CmsPage from "../../components/shared/cms_page/index.astro";
 ---
 
-<CoreLayout
-  title={notFoundMeta.title}
-  description={notFoundMeta.description}
-  keywords={notFoundMeta.keywords}
-  canonical={notFoundMeta.canonical}
-  type={notFoundMeta.type}
-  robots={notFoundMeta.robots}
-  structuredData={notFoundMeta.structuredData}
->
-  <Header />
-  <HeroSection
-    imageSrc="https://images.pexels.com/photos/7841410/pexels-photo-7841410.jpeg"
-    imageAlt="documento"
-    title="Página no encontrada"
-    description="Lo siento, la página que estás buscando no existe."
-    buttons={[
-      {
-        text: "Volver al inicio",
-        href: routes.home,
-      },
-    ]}
-    className="h-screen"
-  />
-  <Footer />
-</CoreLayout>
+<CmsPage slug="404" />

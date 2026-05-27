@@ -1,23 +1,48 @@
 ---
-import { site } from "../../../config";
+interface Props {
+  title?: string
+  instagramUrl?: string
+}
+
+const {
+  title = 'Síguenos en @egidajuridica',
+  instagramUrl = 'https://www.instagram.com/egidajuridica',
+} = Astro.props
+
+const handleMatch = title.match(/@([\w.]+)/)
+const handle = handleMatch?.[1] || 'egidajuridica'
 ---
 
-<section
-  class="max-w-7xl mx-auto py-24 md:py-32 text-center"
-  aria-label="Redes sociales"
->
-  <h2
-    class="font-serif text-2xl md:text-7xl text-foreground"
-    data-animate="fade-up"
-  >
-    Síguenos en
-    <a
-      href={site.instagram}
-      target="_blank"
-      rel="noopener noreferrer"
-      class="hover:underline"
-      aria-label="Visitar nuestro perfil de Instagram @egidajuridica"
-      >@egidajuridica</a
-    >
+<section class="max-w-7xl mx-auto py-24 md:py-32 text-center" aria-label="Redes sociales">
+  <h2 class="font-serif text-2xl md:text-7xl text-foreground" data-animate="fade-up">
+    {
+      title.includes('@') ? (
+        <>
+          {title.split('@')[0]}
+          <a
+            href={instagramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:underline"
+            aria-label={`Visitar nuestro perfil de Instagram @${handle}`}
+          >
+            @{handle}
+          </a>
+        </>
+      ) : (
+        <>
+          {title}{' '}
+          <a
+            href={instagramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:underline"
+            aria-label={`Visitar nuestro perfil de Instagram @${handle}`}
+          >
+            @{handle}
+          </a>
+        </>
+      )
+    }
   </h2>
 </section>

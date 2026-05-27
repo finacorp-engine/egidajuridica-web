@@ -1,87 +1,99 @@
 ---
-// Hero Section Component
-import { routes } from "../../../config";
+import type { HeroButton } from '../../../lib/cms/types'
+
+interface Props {
+  title?: string
+  subtitle?: string
+  imageSrc?: string
+  imageAlt?: string
+  primaryCta?: HeroButton
+  secondaryCta?: HeroButton
+  showScrollIndicator?: boolean
+}
+
+const {
+  title = 'Protegemos tus intereses laborales y empresariales.',
+  subtitle = 'Asesoramiento claro. Estrategia legal eficaz.',
+  imageSrc = 'https://images.pexels.com/photos/8370871/pexels-photo-8370871.jpeg',
+  imageAlt = 'Hero principal de Egida Jurídica',
+  primaryCta = { text: 'Solicita asesoramiento', href: '/contacto' },
+  secondaryCta = { text: 'Nuestros servicios', href: '/servicios' },
+  showScrollIndicator = true,
+} = Astro.props
 ---
 
 <section
   class="relative min-h-[80vh] md:min-h-svh w-full flex flex-col items-center justify-center bg-zinc-900 overflow-hidden text-center isolate"
-  aria-label="Protegemos tus intereses laborales y empresariales"
+  aria-label={title}
 >
-  <!-- Background Image with Overlay -->
   <div class="absolute inset-0 z-[-1] pointer-events-none" aria-hidden="true">
     <img
-      src="https://images.pexels.com/photos/8370871/pexels-photo-8370871.jpeg"
-      alt=""
+      src={imageSrc}
+      alt={imageAlt}
       class="w-full h-full object-cover object-center scale-105 hero-animate-image"
       loading="eager"
     />
-    <!-- The dark overlay creates contrast for white text -->
     <div class="absolute inset-0 bg-black/60"></div>
-    <div
-      class="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-black/60 to-transparent"
-    >
-    </div>
-    <div
-      class="absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-black/60 to-transparent"
-    >
-    </div>
+    <div class="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-black/60 to-transparent"></div>
+    <div class="absolute inset-x-0 bottom-0 h-40 bg-linear-to-t from-black/60 to-transparent"></div>
   </div>
 
-  <!-- Content -->
   <div
     class="px-5 md:px-6 mt-12 md:mt-16 text-white max-w-xl md:max-w-3xl lg:max-w-5xl mx-auto flex flex-col items-center gap-4 md:gap-6"
   >
-    <!-- Main Headline -->
     <h1
       class="font-serif text-4xl md:text-5xl lg:text-7xl leading-[1.1] font-normal text-white tracking-normal capitalize hero-animate-title"
     >
-      Protegemos tus intereses laborales y empresariales.
+      {title}
     </h1>
 
     <div class="h-[1px] w-30 md:w-50 bg-white" aria-hidden="true"></div>
 
-    <!-- Subheading -->
-    <p
-      class="font-sans text-[clamp(0.9rem,2vw,1.1rem)] text-white/95 mt-2 hero-animate-description"
-    >
-      Asesoramiento claro. Estrategia legal eficaz.
-    </p>
+    {
+      subtitle && (
+        <p class="font-sans text-[clamp(0.9rem,2vw,1.1rem)] text-white/95 mt-2 hero-animate-description">
+          {subtitle}
+        </p>
+      )
+    }
 
-    <!-- Buttons -->
     <div
       class="flex flex-col sm:flex-row gap-4 md:gap-5 mt-4 md:mt-6 w-full sm:w-auto hero-animate-buttons"
       role="group"
       aria-label="Acciones principales"
     >
-      <a
-        href={routes.contact}
-        class="inline-flex items-center justify-center uppercase tracking-widest text-xs md:text-sm font-medium px-5 py-3 md:px-6 md:py-4 border border-white/50 bg-transparent hover:bg-white hover:text-black transition-colors duration-300 w-full sm:w-auto"
-        aria-label="Solicitar asesoramiento jurídico"
-      >
-        Solicita asesoramiento
-      </a>
-      <a
-        href={routes.services}
-        class="inline-flex items-center justify-center uppercase tracking-widest text-xs md:text-sm font-medium px-5 py-3 md:px-6 md:py-4 border border-white/50 bg-transparent hover:bg-white hover:text-black transition-colors duration-300 w-full sm:w-auto"
-        aria-label="Ver nuestros servicios jurídicos"
-      >
-        Nuestros servicios
-      </a>
+      {
+        primaryCta && (
+          <a
+            href={primaryCta.href}
+            class="inline-flex items-center justify-center uppercase tracking-widest text-xs md:text-sm font-medium px-5 py-3 md:px-6 md:py-4 border border-white/50 bg-transparent hover:bg-white hover:text-black transition-colors duration-300 w-full sm:w-auto"
+          >
+            {primaryCta.text}
+          </a>
+        )
+      }
+      {
+        secondaryCta && (
+          <a
+            href={secondaryCta.href}
+            class="inline-flex items-center justify-center uppercase tracking-widest text-xs md:text-sm font-medium px-5 py-3 md:px-6 md:py-4 border border-white/50 bg-transparent hover:bg-white hover:text-black transition-colors duration-300 w-full sm:w-auto"
+          >
+            {secondaryCta.text}
+          </a>
+        )
+      }
     </div>
   </div>
 
-  <!-- Scroll Down Indicator -->
-  <div
-    class="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 md:gap-4"
-    aria-hidden="true"
-  >
-    <div
-      class="w-px h-10 md:h-16 bg-linear-to-b from-white/20 via-white/50 to-white/10"
-    >
-    </div>
-    <span
-      class="text-sm tracking-wide font-sans uppercase text-white/50 whitespace-nowrap"
-      >scroll</span
-    >
-  </div>
+  {
+    showScrollIndicator && (
+      <div
+        class="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 md:gap-4"
+        aria-hidden="true"
+      >
+        <div class="w-px h-10 md:h-16 bg-linear-to-b from-white/20 via-white/50 to-white/10"></div>
+        <span class="text-sm tracking-wide font-sans uppercase text-white/50 whitespace-nowrap">scroll</span>
+      </div>
+    )
+  }
 </section>

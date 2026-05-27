@@ -1,0 +1,95 @@
+---
+import HeroHome from '../../principal/hero_section/index.astro'
+import AboutSection from '../../principal/about_section/index.astro'
+import { ServicesSection } from '../../principal/services_section/index.tsx'
+import ExpertiseSection from '../../acerca/expertise_section/index.astro'
+import PhraseSection from '../../servicios/phrase_section/index.astro'
+import SpecialtiesSection from '../../servicios/specialties_section/index.astro'
+import FormSection from '../../contacto/form_section/index.tsx'
+import MapSection from '../../contacto/map_section/index.astro'
+import TestimonialsSection from '../../testimonios/testimonials_section/index.astro'
+import HeroSection from '../hero_section/index.astro'
+import InstagramSection from '../instagram_section/index.astro'
+import LegalContentSection from '../legal_content_section/index.astro'
+import { TeamSection } from '../team_section/index.tsx'
+import { SuccessStoriesSection } from '../success_stories_section/index.tsx'
+import { getBlockProps } from '../../../lib/cms/mappers/blocks'
+import type { CmsBlock, CmsSiteSettings } from '../../../lib/cms/types'
+
+interface Props {
+  block: CmsBlock
+  site: CmsSiteSettings
+}
+
+const { block, site } = Astro.props
+const props = getBlockProps(block, site)
+---
+
+{
+  block.blockType === 'heroHome' && props && <HeroHome {...props} />
+}
+{block.blockType === 'hero' && props && <HeroSection {...props} />}
+{
+  block.blockType === 'about' && props && <AboutSection {...props} />
+}
+{
+  block.blockType === 'phrase' && props && <PhraseSection {...props} />
+}
+{
+  block.blockType === 'specialties' && props && <SpecialtiesSection {...props} />
+}
+{
+  block.blockType === 'expertise' && props && <ExpertiseSection {...props} />
+}
+{
+  block.blockType === 'servicesCarousel' && props && (
+    <ServicesSection client:load slides={props.slides} introTitle={props.introTitle} />
+  )
+}
+{
+  block.blockType === 'teamCarousel' && props && (
+    <TeamSection client:load members={props.members} introTitle={props.introTitle} introText={props.introText} />
+  )
+}
+{
+  block.blockType === 'successStoriesCarousel' && props && (
+    <SuccessStoriesSection client:load stories={props.stories} title={props.title} />
+  )
+}
+{
+  block.blockType === 'testimonialsList' && props && (
+    <TestimonialsSection testimonialsData={props.testimonialsData} />
+  )
+}
+{
+  block.blockType === 'instagram' && props && (
+    <InstagramSection title={props.title} instagramUrl={props.instagramUrl} />
+  )
+}
+{
+  block.blockType === 'contactForm' && props && (
+    <FormSection
+      client:load
+      phone={props.phone}
+      email={props.email}
+      heading={props.heading}
+      submitLabel={props.submitLabel}
+      fieldLabels={props.fieldLabels}
+    />
+  )
+}
+{
+  block.blockType === 'mapSection' && props && (
+    <MapSection title={props.title} embedUrl={props.embedUrl} />
+  )
+}
+{
+  block.blockType === 'legalContent' && props && (
+    <LegalContentSection
+      heading={props.heading}
+      lastUpdated={props.lastUpdated}
+      intro={props.intro}
+      bodyHtml={props.bodyHtml}
+    />
+  )
+}

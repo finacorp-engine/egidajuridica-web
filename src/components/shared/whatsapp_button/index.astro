@@ -1,9 +1,15 @@
 ---
-import { site } from "../../../config";
+import { site as fallbackSite } from "../../../config";
+
+interface Props {
+  whatsappUrl?: string;
+}
+
+const { whatsappUrl = fallbackSite.whatsapp } = Astro.props;
 ---
 
 <a
-  href={site.whatsapp}
+  href={whatsappUrl}
   target="_blank"
   rel="noopener noreferrer"
   class="fixed flex items-center z-70 justify-center bottom-4 right-4 p-2 rounded-full bg-whatsapp hover:bg-whatsapp/80 cursor-pointer transition-all duration-200"

@@ -1,28 +1,31 @@
 ---
-import { routes, site } from "../../../config";
+import { site as fallbackSite } from "../../../config";
+import type { CmsSiteSettings } from "../../../lib/cms/types";
+import type { NavLink } from "../../../lib/cms/types";
 
-const navigation = [
-  {
-    label: "Inicio",
-    href: routes.home,
-  },
-  {
-    label: "Sobre nosotros",
-    href: routes.about,
-  },
-  {
-    label: "Servicios",
-    href: routes.services,
-  },
-  {
-    label: "Testimonios",
-    href: routes.testimonials,
-  },
-  {
-    label: "Contáctanos",
-    href: routes.contact,
-  },
+interface Props {
+  site?: CmsSiteSettings;
+  footerNav?: NavLink[];
+  legalLinks?: NavLink[];
+}
+
+const { site = fallbackSite, footerNav = [], legalLinks = [] } = Astro.props;
+
+const defaultFooterNav: NavLink[] = [
+  { label: "Inicio", href: "/" },
+  { label: "Sobre nosotros", href: "/acerca" },
+  { label: "Servicios", href: "/servicios" },
+  { label: "Testimonios", href: "/testimonios" },
+  { label: "Contáctanos", href: "/contacto" },
 ];
+
+const defaultLegalLinks: NavLink[] = [
+  { label: "Política de privacidad", href: "/privacidad" },
+  { label: "Términos y condiciones", href: "/terminos" },
+];
+
+const navigation = footerNav.length > 0 ? footerNav : defaultFooterNav;
+const legalNavigation = legalLinks.length > 0 ? legalLinks : defaultLegalLinks;
 ---
 
 <footer
@@ -239,18 +242,17 @@ const navigation = [
           class="flex items-center gap-3 text-[0.65rem] md:text-xs"
           aria-label="Enlaces legales"
         >
-          <a
-            href={routes.privacy}
-            class="hover:text-primary-foreground transition-colors"
-            aria-label="Leer nuestra política de privacidad"
-            >Política de privacidad</a
-          >
-          <a
-            href={routes.terms}
-            class="hover:text-primary-foreground transition-colors"
-            aria-label="Leer nuestros términos y condiciones"
-            >Términos y condiciones</a
-          >
+          {
+            legalNavigation.map((item) => (
+              <a
+                href={item.href}
+                class="hover:text-primary-foreground transition-colors"
+                aria-label={`Leer ${item.label.toLowerCase()}`}
+              >
+                {item.label}
+              </a>
+            ))
+          }
         </nav>
       </div>
     </div>
