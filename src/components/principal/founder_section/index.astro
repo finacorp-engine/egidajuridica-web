@@ -1,5 +1,7 @@
 ---
-// Founder Section Component — historia del fundador (bloque "founder" del CMS)
+// Founder Section Component — historia del fundador (bloque "founder" del CMS).
+// Con `embedded` se muestra en versión clara dentro de la sección del equipo,
+// para no romper la alternancia negro/blanco de las secciones.
 import type { FounderHighlight, HeroButton } from "../../../lib/cms/types";
 
 interface Props {
@@ -14,6 +16,7 @@ interface Props {
   quote?: string;
   highlights?: FounderHighlight[];
   cta?: HeroButton;
+  embedded?: boolean;
 }
 
 const {
@@ -28,16 +31,44 @@ const {
   quote,
   highlights = [],
   cta,
+  embedded = false,
 } = Astro.props;
+
+const Wrapper = embedded ? "div" : "section";
+// Dentro del equipo el botón del panel ("Conoce a nuestro equipo") reemplaza al CTA
+const showCta = cta && !embedded;
+
+const tone = embedded
+  ? {
+      wrapper: "relative w-full",
+      imageBg: "bg-zinc-100",
+      fade: "from-zinc-950/60",
+      subtitle: "text-zinc-600",
+      title: "text-zinc-900",
+      text: "text-zinc-500",
+      quote: "text-zinc-800",
+      divider: "border-zinc-200",
+      highlightLabel: "text-zinc-500",
+      cta: "border-zinc-900 text-zinc-900 hover:bg-zinc-900 hover:text-white",
+    }
+  : {
+      wrapper: "relative w-full bg-zinc-950 text-white py-20 md:py-28 lg:py-36 overflow-hidden",
+      imageBg: "bg-zinc-900",
+      fade: "from-zinc-950/80",
+      subtitle: "text-zinc-400",
+      title: "text-white",
+      text: "text-zinc-400",
+      quote: "text-white/90",
+      divider: "border-white/10",
+      highlightLabel: "text-zinc-400",
+      cta: "border-white/70 text-white hover:bg-white hover:text-zinc-950",
+    };
 ---
 
-<section
-  class="relative w-full bg-zinc-950 text-white py-20 md:py-28 lg:py-36 overflow-hidden"
-  aria-labelledby="founder-title"
->
+<Wrapper class={tone.wrapper} aria-labelledby="founder-title">
   <!-- Giant Background Text (Decorative) -->
   {
-    backgroundText && (
+    !embedded && backgroundText && (
       <div
         class="absolute inset-0 pointer-events-none select-none flex items-center justify-center"
         aria-hidden="true"
@@ -53,11 +84,11 @@ const {
   }
 
   <div
-    class="relative z-10 max-w-350 mx-auto px-5 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-20 items-center"
+    class={`relative z-10 mx-auto grid grid-cols-1 lg:grid-cols-12 items-center ${embedded ? "max-w-6xl px-4 xl:px-8 gap-12 lg:gap-16" : "max-w-350 px-5 md:px-12 gap-14 lg:gap-20"}`}
   >
     <!-- Image Column -->
     <div
-      class="group relative w-full max-w-95 sm:max-w-110 mx-auto lg:col-span-5 lg:max-w-none"
+      class={`group relative w-full mx-auto lg:max-w-none ${embedded ? "max-w-72 sm:max-w-80 lg:col-span-4" : "max-w-95 sm:max-w-110 lg:col-span-5"}`}
       data-animate="slide-right"
       data-animate-duration="slow"
     >
@@ -68,7 +99,7 @@ const {
       >
       </div>
 
-      <div class="relative z-10 aspect-3/4 overflow-hidden bg-zinc-900">
+      <div class={`relative z-10 aspect-3/4 overflow-hidden ${tone.imageBg}`}>
         {
           imageSrc && (
             <img
@@ -80,7 +111,7 @@ const {
           )
         }
         <div
-          class="absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-zinc-950/80 to-transparent"
+          class={`absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t ${tone.fade} to-transparent`}
           aria-hidden="true"
         >
         </div>
@@ -97,12 +128,12 @@ const {
     </div>
 
     <!-- Text Column -->
-    <div class="lg:col-span-7 flex flex-col items-start">
+    <div class={`flex flex-col items-start text-left ${embedded ? "lg:col-span-8" : "lg:col-span-7"}`}>
       {
         subtitle && (
           <div class="flex items-center gap-3 md:gap-4 mb-4 md:mb-6" data-animate="fade-up">
             <div class="h-px w-6 md:w-8 lg:w-10 bg-gold" aria-hidden="true" />
-            <span class="text-zinc-400 italic text-xs md:text-sm lg:text-lg tracking-wide">
+            <span class={`${tone.subtitle} italic text-xs md:text-sm lg:text-lg tracking-wide`}>
               {subtitle}
             </span>
           </div>
@@ -111,7 +142,7 @@ const {
 
       <h2
         id="founder-title"
-        class="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight mb-3"
+        class={`font-serif ${embedded ? "text-3xl sm:text-4xl md:text-5xl" : "text-3xl sm:text-4xl md:text-5xl lg:text-6xl"} leading-[1.05] tracking-tight mb-3 ${tone.title}`}
         data-animate="fade-up"
         data-animate-delay="100"
       >
@@ -132,7 +163,7 @@ const {
       {
         paragraphs.map((paragraph, i) => (
           <p
-            class="font-sans text-sm md:text-base text-zinc-400 leading-relaxed mb-5 max-w-2xl"
+            class={`font-sans text-sm md:text-base ${tone.text} leading-relaxed mb-5 max-w-2xl`}
             data-animate="fade-up"
             data-animate-delay={`${200 + i * 100}`}
           >
@@ -148,7 +179,7 @@ const {
             data-animate="fade-up"
             data-animate-delay="400"
           >
-            <p class="font-serif italic text-xl md:text-2xl lg:text-3xl text-white/90 leading-snug">
+            <p class={`font-serif italic text-xl md:text-2xl lg:text-3xl ${tone.quote} leading-snug`}>
               “{quote}”
             </p>
           </blockquote>
@@ -156,24 +187,24 @@ const {
       }
 
       {
-        (highlights.length > 0 || cta) && (
+        (highlights.length > 0 || showCta) && (
           <div
-            class="mt-10 md:mt-12 pt-8 border-t border-white/10 w-full max-w-2xl flex flex-wrap gap-x-14 gap-y-6"
+            class={`mt-10 md:mt-12 pt-8 border-t ${tone.divider} w-full max-w-2xl flex flex-wrap gap-x-14 gap-y-6`}
             data-animate="fade-up"
             data-animate-delay="500"
           >
             {highlights.map((item) => (
               <div>
                 <span class="block font-serif text-3xl md:text-4xl text-gold">{item.value}</span>
-                <span class="block font-sans text-xs md:text-sm text-zinc-400 uppercase tracking-wider mt-1">
+                <span class={`block font-sans text-xs md:text-sm ${tone.highlightLabel} uppercase tracking-wider mt-1`}>
                   {item.label}
                 </span>
               </div>
             ))}
-            {cta && (
+            {showCta && cta && (
               <a
                 href={cta.href}
-                class="self-center ml-auto px-5 py-2.5 md:px-6 md:py-3 border border-white/70 text-xs md:text-sm font-medium uppercase text-white hover:bg-white hover:text-zinc-950 transition-colors duration-500"
+                class={`self-center ml-auto px-5 py-2.5 md:px-6 md:py-3 border text-xs md:text-sm font-medium uppercase transition-colors duration-500 ${tone.cta}`}
               >
                 {cta.text}
               </a>
@@ -183,4 +214,4 @@ const {
       }
     </div>
   </div>
-</section>
+</Wrapper>

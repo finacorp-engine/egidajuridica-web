@@ -14,17 +14,20 @@ import InstagramSection from '../instagram_section/index.astro'
 import LegalContentSection from '../legal_content_section/index.astro'
 import { TeamSection } from '../team_section/index.tsx'
 import { SuccessStoriesSection } from '../success_stories_section/index.tsx'
-import { getBlockProps } from '../../../lib/cms/mappers/blocks'
+import { getBlockProps, mapFounderBlock } from '../../../lib/cms/mappers/blocks'
 import type { CmsBlock, CmsSiteSettings, CmsTeamMember } from '../../../lib/cms/types'
 
 interface Props {
   block: CmsBlock
   site: CmsSiteSettings
   founderFallback?: CmsTeamMember | null
+  // Bloque "founder" que se muestra dentro del carrusel de equipo
+  founderBlock?: CmsBlock | null
 }
 
-const { block, site, founderFallback } = Astro.props
+const { block, site, founderFallback, founderBlock } = Astro.props
 const props = getBlockProps(block, site, founderFallback)
+const embeddedFounder = founderBlock ? mapFounderBlock(founderBlock, founderFallback) : null
 ---
 
 {
@@ -53,7 +56,9 @@ const props = getBlockProps(block, site, founderFallback)
 }
 {
   block.blockType === 'teamCarousel' && props && (
-    <TeamSection client:load members={props.members} introTitle={props.introTitle} introText={props.introText} />
+    <TeamSection client:load members={props.members} introTitle={props.introTitle} introText={props.introText}>
+      {embeddedFounder && <FounderSection {...embeddedFounder} embedded />}
+    </TeamSection>
   )
 }
 {
