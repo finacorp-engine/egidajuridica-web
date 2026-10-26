@@ -26,8 +26,10 @@ export const site = {
 
   // ── Redes sociales ─────────────────────────────────────
   whatsapp: "https://wa.me/51964943865",
+  facebook: "https://www.facebook.com/profile.php?id=61577522193729",
   linkedin: "https://www.linkedin.com/company/egidajuridica",
   instagram: "https://www.instagram.com/egidajuridica",
+  tiktok: "https://www.tiktok.com/@egida_juridica",
   youtube: "https://www.youtube.com/@egidajuridica",
   linktree: "https://linktr.ee/egidajuridica",
 

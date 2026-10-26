@@ -1,6 +1,7 @@
 ---
 import HeroHome from '../../principal/hero_section/index.astro'
 import AboutSection from '../../principal/about_section/index.astro'
+import FounderSection from '../../principal/founder_section/index.astro'
 import { ServicesSection } from '../../principal/services_section/index.tsx'
 import ExpertiseSection from '../../acerca/expertise_section/index.astro'
 import PhraseSection from '../../servicios/phrase_section/index.astro'
@@ -14,15 +15,16 @@ import LegalContentSection from '../legal_content_section/index.astro'
 import { TeamSection } from '../team_section/index.tsx'
 import { SuccessStoriesSection } from '../success_stories_section/index.tsx'
 import { getBlockProps } from '../../../lib/cms/mappers/blocks'
-import type { CmsBlock, CmsSiteSettings } from '../../../lib/cms/types'
+import type { CmsBlock, CmsSiteSettings, CmsTeamMember } from '../../../lib/cms/types'
 
 interface Props {
   block: CmsBlock
   site: CmsSiteSettings
+  founderFallback?: CmsTeamMember | null
 }
 
-const { block, site } = Astro.props
-const props = getBlockProps(block, site)
+const { block, site, founderFallback } = Astro.props
+const props = getBlockProps(block, site, founderFallback)
 ---
 
 {
@@ -45,6 +47,9 @@ const props = getBlockProps(block, site)
   block.blockType === 'servicesCarousel' && props && (
     <ServicesSection client:load slides={props.slides} introTitle={props.introTitle} />
   )
+}
+{
+  block.blockType === 'founder' && props && <FounderSection {...props} />
 }
 {
   block.blockType === 'teamCarousel' && props && (

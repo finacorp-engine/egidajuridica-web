@@ -165,7 +165,7 @@ const links = navLinks.length > 0 ? navLinks : defaultNavLinks;
     <!-- Mobile Nav Links -->
     <nav class="flex flex-col mt-8" aria-label="Navegación principal móvil">
       {
-        navLinks.map((link, i) => (
+        links.map((link, i) => (
           <a
             href={link.href}
             class="mobile-menu-link flex items-center justify-between py-1 text-primary-foreground no-underline opacity-0 hover:text-gold transition-colors duration-200"

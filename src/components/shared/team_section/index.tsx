@@ -20,6 +20,8 @@ export const TeamSection = ({
   introText = "Contamos con un equipo de abogados especializados que combinan experiencia, formación continua y un enfoque estratégico para ofrecer soluciones jurídicas eficaces.",
 }: Props) => {
   const [mounted, setMounted] = useState(false);
+  // En celular no hay hover: al tocar una foto se muestra a color
+  const [activeId, setActiveId] = useState<TeamMemberItem["id"] | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -88,8 +90,8 @@ export const TeamSection = ({
             >
               {members.map((member) => (
                 <SwiperSlide key={member.id} role="group" aria-roledescription="diapositiva" aria-label={`${member.name}, ${member.role}`}>
-                  <div className="group relative h-125 sm:h-150 overflow-hidden bg-primary">
-                    <img src={member.image} alt={`Fotografía de ${member.name}`} className="absolute inset-0 w-full h-full object-cover object-top filter grayscale contrast-125 transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                  <div className="group relative h-125 sm:h-150 overflow-hidden bg-primary cursor-pointer" onClick={() => setActiveId((current) => (current === member.id ? null : member.id))}>
+                    <img src={member.image} alt={`Fotografía de ${member.name}`} className={`absolute inset-0 w-full h-full object-cover object-top filter contrast-125 transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0 ${activeId === member.id ? "grayscale-0 scale-105" : "grayscale"}`} loading="lazy" />
                     <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-primary/90 via-primary/50 to-transparent z-10" aria-hidden="true" />
                     <div className="absolute inset-x-0 bottom-0 p-6 md:p-8 z-20 text-center flex flex-col justify-end items-center">
                       <h3 className="text-primary-foreground text-2xl md:text-[28px] leading-tight font-serif mb-2" style={{ fontFamily: "'Times New Roman', serif" }}>

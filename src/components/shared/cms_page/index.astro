@@ -1,7 +1,8 @@
 ---
-import { getPageContext } from '../../../lib/cms/queries'
+import { getFounder, getPageContext } from '../../../lib/cms/queries'
 import { mapPageSeo } from '../../../lib/cms/mappers/seo'
 import { mapNavItems } from '../../../lib/cms/mappers/links'
+import { defaultFounderBlock } from '../../../lib/cms/mappers/blocks'
 import BlockRenderer from '../block_renderer/index.astro'
 import { Header, Footer } from '../index'
 import { CoreLayout } from '../../../layouts'
@@ -22,6 +23,25 @@ const seo = mapPageSeo(page, siteSettings)
 const headerNav = mapNavItems(navigation.headerNavItems)
 const footerNav = mapNavItems(navigation.footerNavItems)
 const legalLinks = mapNavItems(navigation.legalLinks)
+
+const layout = [...(page.layout ?? [])]
+const founderBlocks = layout.filter((block) => block.blockType === 'founder')
+
+// Mientras inicio no tenga el bloque "Sección Fundador" en el CMS, se muestra
+// con los valores por defecto justo después del carrusel de servicios
+if (slug === 'home' && founderBlocks.length === 0) {
+  const servicesIndex = layout.findIndex((block) => block.blockType === 'servicesCarousel')
+  if (servicesIndex >= 0) {
+    layout.splice(servicesIndex + 1, 0, defaultFounderBlock)
+    founderBlocks.push(defaultFounderBlock)
+  }
+}
+
+// Bloques sin miembro elegido usan al miembro cuyo cargo contiene "Fundador"
+const needsFounderFallback = founderBlocks.some(
+  (block) => !block.member || typeof block.member !== 'object',
+)
+const founderFallback = needsFounderFallback ? await getFounder() : null
 ---
 
 <CoreLayout
@@ -33,8 +53,8 @@ const legalLinks = mapNavItems(navigation.legalLinks)
   <Header site={siteSettings} navLinks={headerNav} />
   <main id="main-content">
     {
-      page.layout?.map((block) => (
-        <BlockRenderer block={block} site={siteSettings} />
+      layout.map((block) => (
+        <BlockRenderer block={block} site={siteSettings} founderFallback={founderFallback} />
       ))
     }
   </main>

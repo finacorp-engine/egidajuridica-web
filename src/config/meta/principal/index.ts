@@ -22,7 +22,7 @@ export const principalMeta = {
       streetAddress: site.address,
       addressCountry: site.country,
     },
-    sameAs: [site.linkedin, site.instagram, site.youtube],
+    sameAs: [site.facebook, site.linkedin, site.instagram, site.tiktok, site.youtube],
     areaServed: {
       "@type": "Country",
       name: "Perú",

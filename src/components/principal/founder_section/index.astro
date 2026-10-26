@@ -1,0 +1,186 @@
+---
+// Founder Section Component — historia del fundador (bloque "founder" del CMS)
+import type { FounderHighlight, HeroButton } from "../../../lib/cms/types";
+
+interface Props {
+  name?: string;
+  role?: string;
+  imageSrc?: string;
+  imageAlt?: string;
+  backgroundText?: string;
+  subtitle?: string;
+  photoLabel?: string;
+  paragraphs?: string[];
+  quote?: string;
+  highlights?: FounderHighlight[];
+  cta?: HeroButton;
+}
+
+const {
+  name = "",
+  role = "",
+  imageSrc,
+  imageAlt,
+  backgroundText,
+  subtitle,
+  photoLabel,
+  paragraphs = [],
+  quote,
+  highlights = [],
+  cta,
+} = Astro.props;
+---
+
+<section
+  class="relative w-full bg-zinc-950 text-white py-20 md:py-28 lg:py-36 overflow-hidden"
+  aria-labelledby="founder-title"
+>
+  <!-- Giant Background Text (Decorative) -->
+  {
+    backgroundText && (
+      <div
+        class="absolute inset-0 pointer-events-none select-none flex items-center justify-center"
+        aria-hidden="true"
+      >
+        <span
+          class="text-[22vw] uppercase tracking-widest text-white/3 whitespace-nowrap"
+          style="font-family: 'Times New Roman', serif; line-height: 0.7;"
+        >
+          {backgroundText}
+        </span>
+      </div>
+    )
+  }
+
+  <div
+    class="relative z-10 max-w-350 mx-auto px-5 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-20 items-center"
+  >
+    <!-- Image Column -->
+    <div
+      class="group relative w-full max-w-95 sm:max-w-110 mx-auto lg:col-span-5 lg:max-w-none"
+      data-animate="slide-right"
+      data-animate-duration="slow"
+    >
+      <!-- Offset Frame (Decorative) -->
+      <div
+        class="absolute inset-0 border border-gold translate-x-4 translate-y-4 md:translate-x-6 md:translate-y-6 transition-transform duration-700 ease-in-out group-hover:translate-x-0 group-hover:translate-y-0 pointer-events-none"
+        aria-hidden="true"
+      >
+      </div>
+
+      <div class="relative z-10 aspect-3/4 overflow-hidden bg-zinc-900">
+        {
+          imageSrc && (
+            <img
+              src={imageSrc}
+              alt={imageAlt || `Fotografía de ${name}`}
+              class="w-full h-full object-cover object-top grayscale-[35%] transition-all duration-700 ease-in-out group-hover:grayscale-0 group-hover:scale-105"
+              loading="lazy"
+            />
+          )
+        }
+        <div
+          class="absolute inset-x-0 bottom-0 h-1/3 bg-linear-to-t from-zinc-950/80 to-transparent"
+          aria-hidden="true"
+        >
+        </div>
+        {
+          photoLabel && (
+            <div class="absolute left-5 bottom-5 md:left-6 md:bottom-6">
+              <span class="block text-gold text-xs uppercase tracking-[0.25em]">
+                {photoLabel}
+              </span>
+            </div>
+          )
+        }
+      </div>
+    </div>
+
+    <!-- Text Column -->
+    <div class="lg:col-span-7 flex flex-col items-start">
+      {
+        subtitle && (
+          <div class="flex items-center gap-3 md:gap-4 mb-4 md:mb-6" data-animate="fade-up">
+            <div class="h-px w-6 md:w-8 lg:w-10 bg-gold" aria-hidden="true" />
+            <span class="text-zinc-400 italic text-xs md:text-sm lg:text-lg tracking-wide">
+              {subtitle}
+            </span>
+          </div>
+        )
+      }
+
+      <h2
+        id="founder-title"
+        class="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-tight mb-3"
+        data-animate="fade-up"
+        data-animate-delay="100"
+      >
+        {name}
+      </h2>
+      {
+        role && (
+          <p
+            class="font-sans text-sm md:text-base text-gold uppercase tracking-[0.2em] mb-8 md:mb-10"
+            data-animate="fade-up"
+            data-animate-delay="150"
+          >
+            {role}
+          </p>
+        )
+      }
+
+      {
+        paragraphs.map((paragraph, i) => (
+          <p
+            class="font-sans text-sm md:text-base text-zinc-400 leading-relaxed mb-5 max-w-2xl"
+            data-animate="fade-up"
+            data-animate-delay={`${200 + i * 100}`}
+          >
+            {paragraph}
+          </p>
+        ))
+      }
+
+      {
+        quote && (
+          <blockquote
+            class="relative mt-6 md:mt-8 pl-6 md:pl-8 border-l-2 border-gold max-w-2xl"
+            data-animate="fade-up"
+            data-animate-delay="400"
+          >
+            <p class="font-serif italic text-xl md:text-2xl lg:text-3xl text-white/90 leading-snug">
+              “{quote}”
+            </p>
+          </blockquote>
+        )
+      }
+
+      {
+        (highlights.length > 0 || cta) && (
+          <div
+            class="mt-10 md:mt-12 pt-8 border-t border-white/10 w-full max-w-2xl flex flex-wrap gap-x-14 gap-y-6"
+            data-animate="fade-up"
+            data-animate-delay="500"
+          >
+            {highlights.map((item) => (
+              <div>
+                <span class="block font-serif text-3xl md:text-4xl text-gold">{item.value}</span>
+                <span class="block font-sans text-xs md:text-sm text-zinc-400 uppercase tracking-wider mt-1">
+                  {item.label}
+                </span>
+              </div>
+            ))}
+            {cta && (
+              <a
+                href={cta.href}
+                class="self-center ml-auto px-5 py-2.5 md:px-6 md:py-3 border border-white/70 text-xs md:text-sm font-medium uppercase text-white hover:bg-white hover:text-zinc-950 transition-colors duration-500"
+              >
+                {cta.text}
+              </a>
+            )}
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>

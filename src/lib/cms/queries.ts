@@ -3,6 +3,7 @@ import type {
   CmsNavigation,
   CmsPage,
   CmsSiteSettings,
+  CmsTeamMember,
   PayloadListResponse,
 } from './types'
 import { site as fallbackSite } from '../../config/sites'
@@ -40,9 +41,25 @@ export const getSiteSettings = async (): Promise<CmsSiteSettings> => {
 
 export const getNavigation = async (): Promise<CmsNavigation> => {
   try {
-    return await cmsFetch<CmsNavigation>('/api/globals/navigation?depth=0')
+    // depth=1 para que cada `page` llegue como objeto con su slug (con depth=0 llega solo el ID y el enlace queda en '#')
+    return await cmsFetch<CmsNavigation>('/api/globals/navigation?depth=1&populate[pages][slug]=true')
   } catch {
     return defaultNavigation
+  }
+}
+
+export const getFounder = async (): Promise<CmsTeamMember | null> => {
+  try {
+    const query = buildQuery({
+      'where[role][like]': 'Fundador',
+      depth: 1,
+      limit: 1,
+    })
+
+    const response = await cmsFetch<PayloadListResponse<CmsTeamMember>>(`/api/team-members${query}`)
+    return response.docs[0] ?? null
+  } catch {
+    return null
   }
 }
 

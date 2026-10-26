@@ -4,8 +4,10 @@ import type {
   CmsSiteSettings,
   CmsTeamMember,
   CmsTestimonial,
+  CmsMedia,
   ExpertiseBullet,
   FormFieldLabels,
+  FounderHighlight,
   HeroButton,
   ServiceSlide,
   SpecialtyFeature,
@@ -95,7 +97,70 @@ export const mapFormFieldLabels = (fieldLabels: unknown): FormFieldLabels => {
   }
 }
 
-export const getBlockProps = (block: CmsBlock, site: CmsSiteSettings) => {
+export const mapFounderHighlights = (highlights: unknown): FounderHighlight[] => {
+  return asArray<{ value?: string; label?: string }>(highlights)
+    .filter((item) => item.value)
+    .map((item) => ({
+      value: item.value!,
+      label: item.label || '',
+    }))
+}
+
+// Historia en un textarea: los párrafos se separan con una línea en blanco
+export const splitParagraphs = (text: unknown): string[] => {
+  if (typeof text !== 'string') return []
+  return text
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean)
+}
+
+// Mismos valores por defecto que el bloque "founder" del CMS. Se usa en inicio
+// mientras la página todavía no tenga ese bloque agregado desde el panel.
+export const defaultFounderBlock: CmsBlock = {
+  blockType: 'founder',
+  backgroundText: 'Fundador',
+  subtitle: 'Nuestro fundador',
+  photoLabel: 'Fundador',
+  story:
+    'Rafael Martín Aguirre Gonzalo fundó Égida Jurídica con una convicción clara: la defensa legal debe ser cercana, transparente y estratégica. Con más de dos décadas de ejercicio profesional en derecho laboral y empresarial, decidió construir una firma donde cada cliente sea escuchado y cada caso se trabaje con rigor.\n\nHoy lidera un equipo de abogados especialistas que comparte esa misma visión: proteger los intereses de personas y empresas con soluciones jurídicas sólidas, explicadas sin tecnicismos y pensadas para cada situación.',
+  quote: 'Defender a un cliente es asumir su causa como propia.',
+  highlights: [
+    { value: '+20', label: 'años de trayectoria' },
+    { value: 'Laboral', label: 'y empresarial' },
+  ],
+  cta: { text: 'Conoce la firma', href: '/acerca' },
+}
+
+export const mapFounderBlock = (block: CmsBlock, fallbackMember?: CmsTeamMember | null) => {
+  const member =
+    block.member && typeof block.member === 'object'
+      ? (block.member as CmsTeamMember)
+      : fallbackMember
+  const name = (block.nameOverride as string) || member?.name || ''
+  const photo = (block.photoOverride as CmsMedia | string | null) || member?.photo
+  const cta = block.cta as { text?: string } | undefined
+
+  return {
+    name,
+    role: (block.roleOverride as string) || member?.role || '',
+    imageSrc: resolveMediaUrl(photo, 'card'),
+    imageAlt: `Fotografía de ${name}`,
+    backgroundText: block.backgroundText as string,
+    subtitle: block.subtitle as string,
+    photoLabel: block.photoLabel as string,
+    paragraphs: splitParagraphs(block.story),
+    quote: block.quote as string,
+    highlights: mapFounderHighlights(block.highlights),
+    cta: cta?.text ? { text: cta.text, href: resolveHref(cta as never) } : undefined,
+  }
+}
+
+export const getBlockProps = (
+  block: CmsBlock,
+  site: CmsSiteSettings,
+  founderFallback?: CmsTeamMember | null,
+) => {
   switch (block.blockType) {
     case 'heroHome': {
       const image = resolveImageWithAlt(block.imageWithAlt as never, 'hero')
@@ -181,6 +246,8 @@ export const getBlockProps = (block: CmsBlock, site: CmsSiteSettings) => {
         slides: mapServicesToSlides(block.services),
         introTitle: block.introTitle as string,
       }
+    case 'founder':
+      return mapFounderBlock(block, founderFallback)
     case 'teamCarousel':
       return {
         members: mapTeamMembers(block.members),

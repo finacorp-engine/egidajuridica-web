@@ -110,8 +110,10 @@ export type CmsSiteSettings = {
   phone?: string
   address?: string
   whatsapp?: string
+  facebook?: string
   linkedin?: string
   instagram?: string
+  tiktok?: string
   youtube?: string
   linktree?: string
   googleReviews?: string
@@ -145,6 +147,11 @@ export type ServiceSlide = {
   buttonText: string
   buttonHref: string
   image: string
+}
+
+export type FounderHighlight = {
+  value: string
+  label: string
 }
 
 export type TeamMemberItem = {
