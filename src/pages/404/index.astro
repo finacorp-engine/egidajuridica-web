@@ -1,5 +1,16 @@
 ---
 import CmsPage from "../../components/shared/cms_page/index.astro";
+import { getPageContext } from "../../lib/cms/queries";
+
+const context = await getPageContext("404").catch(() => null);
+Astro.response.status = 404;
+if (!context?.page) {
+  return new Response("PÃ¡gina no encontrada.", { status: 404 });
+}
 ---
 
-<CmsPage slug="404" />
+<CmsPage
+  page={context.page}
+  siteSettings={context.siteSettings}
+  navigation={context.navigation}
+/>

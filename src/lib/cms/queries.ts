@@ -26,8 +26,9 @@ export const getPage = async (slug: string): Promise<CmsPage | null> => {
 
     const response = await cmsFetch<PayloadListResponse<CmsPage>>(`/api/pages${query}`)
     return response.docs[0] ?? null
-  } catch {
-    return null
+  } catch (error) {
+    console.error('[CMS] Error al cargar la página:', slug, error)
+    throw error
   }
 }
 

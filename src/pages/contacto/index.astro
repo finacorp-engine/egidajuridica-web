@@ -1,5 +1,13 @@
 ---
 import CmsPage from "../../components/shared/cms_page/index.astro";
+import { getPageContext } from "../../lib/cms/queries";
+
+const context = await getPageContext("contacto");
+if (!context.page) return Astro.redirect("/404");
 ---
 
-<CmsPage slug="contacto" />
+<CmsPage
+  page={context.page}
+  siteSettings={context.siteSettings}
+  navigation={context.navigation}
+/>

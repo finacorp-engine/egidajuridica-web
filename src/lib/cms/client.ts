@@ -1,7 +1,7 @@
 const getCmsUrl = (): string => {
   const url =
-    import.meta.env.CMS_URL ||
     (typeof process !== 'undefined' ? process.env.CMS_URL : undefined) ||
+    import.meta.env.CMS_URL ||
     'http://localhost:3000'
   return url.replace(/\/$/, '')
 }

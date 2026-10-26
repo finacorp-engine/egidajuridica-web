@@ -1,5 +1,10 @@
 ---
-import { getFounder, getPageContext } from '../../../lib/cms/queries'
+import type {
+  CmsPage as CmsPageData,
+  CmsSiteSettings,
+  CmsNavigation,
+} from '../../../lib/cms/types'
+import { getFounder } from '../../../lib/cms/queries'
 import { mapPageSeo } from '../../../lib/cms/mappers/seo'
 import { mapNavItems } from '../../../lib/cms/mappers/links'
 import { defaultFounderBlock } from '../../../lib/cms/mappers/blocks'
@@ -8,16 +13,12 @@ import { Header, Footer } from '../index'
 import { CoreLayout } from '../../../layouts'
 
 interface Props {
-  slug: string
+  page: CmsPageData
+  siteSettings: CmsSiteSettings
+  navigation: CmsNavigation
 }
 
-const { slug } = Astro.props
-
-const { page, siteSettings, navigation } = await getPageContext(slug)
-
-if (!page) {
-  return Astro.redirect('/404')
-}
+const { page, siteSettings, navigation } = Astro.props
 
 const seo = mapPageSeo(page, siteSettings)
 const headerNav = mapNavItems(navigation.headerNavItems)
@@ -29,7 +30,7 @@ const founderBlocks = layout.filter((block) => block.blockType === 'founder')
 
 // Mientras inicio no tenga el bloque "Sección Fundador" en el CMS, se muestra
 // con los valores por defecto justo después del carrusel de servicios
-if (slug === 'home' && founderBlocks.length === 0) {
+if (page.slug === 'home' && founderBlocks.length === 0) {
   const servicesIndex = layout.findIndex((block) => block.blockType === 'servicesCarousel')
   if (servicesIndex >= 0) {
     layout.splice(servicesIndex + 1, 0, defaultFounderBlock)
